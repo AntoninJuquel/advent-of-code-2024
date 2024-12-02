@@ -5,6 +5,11 @@ const config: Config = {
   testEnvironment: 'node',
   moduleFileExtensions: ['ts', 'js'],
   testMatch: ['**/*.test.ts'],
+  coverageThreshold: {
+    global: {
+      lines: 80,
+    },
+  },
 };
 
 export default config;

@@ -1,12 +1,12 @@
 import fs from 'fs';
 import path from 'path';
 
-function splitLinesIntoReports(data: string[]) {
+export function splitLinesIntoReports(data: string[]) {
   return data.map((line) =>
     line.split(' ').map((level) => parseInt(level, 10))
   );
 }
-function isSafe(report: number[]): boolean {
+export function isSafe(report: number[]): boolean {
   const increasing = report.every(
     (_, i) =>
       i === 0 || (report[i] > report[i - 1] && report[i] - report[i - 1] <= 3)
@@ -20,7 +20,7 @@ function isSafe(report: number[]): boolean {
   return increasing || decreasing;
 }
 
-function isSafeWithDampener(report: number[]): boolean {
+export function isSafeWithDampener(report: number[]): boolean {
   if (isSafe(report)) {
     return true;
   }
