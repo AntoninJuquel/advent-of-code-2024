@@ -1,7 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 
-export function splitColumnsIntoLists(data: string[]) {
+export function splitLinesIntoColumns(data: string[]) {
   const left: number[] = [];
   const right: number[] = [];
 
@@ -41,7 +41,7 @@ export function calculateSimilarity(left: number[], right: number[]) {
 export default function main() {
   const inputPath = path.join(__dirname, 'input.txt');
   const data = fs.readFileSync(inputPath, 'utf8').split('\n');
-  const { left, right } = splitColumnsIntoLists(data);
+  const { left, right } = splitLinesIntoColumns(data);
   console.log('Distance:', calculateDistance(left, right));
   console.log('Similarity:', calculateSimilarity(left, right));
 }

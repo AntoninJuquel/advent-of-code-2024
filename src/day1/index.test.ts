@@ -1,5 +1,5 @@
 import {
-  splitColumnsIntoLists,
+  splitLinesIntoColumns,
   calculateDistance,
   calculateSimilarity,
 } from './index';
@@ -7,14 +7,14 @@ import {
 describe('splitColumnsIntoLists', () => {
   it('should split columns into lists', () => {
     const data = ['1 2', '3 4', '5 6'];
-    const { left, right } = splitColumnsIntoLists(data);
+    const { left, right } = splitLinesIntoColumns(data);
     expect(left).toEqual([1, 3, 5]);
     expect(right).toEqual([2, 4, 6]);
   });
 
   it('should ignore leading and trailing whitespace', () => {
     const data = ['  1 2  ', '  3 4  ', '  5 6  '];
-    const { left, right } = splitColumnsIntoLists(data);
+    const { left, right } = splitLinesIntoColumns(data);
     expect(left).toEqual([1, 3, 5]);
     expect(right).toEqual([2, 4, 6]);
   });
