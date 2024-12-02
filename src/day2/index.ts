@@ -1,40 +1,58 @@
 import fs from 'fs';
 import path from 'path';
-function splitLinesIntoLevels(data: string[]) {
+
+function splitLinesIntoReports(data: string[]) {
   return data.map((line) =>
     line.split(' ').map((level) => parseInt(level, 10))
   );
 }
-function isLevelSafe(arr: number[]): boolean {
-  let isIncreasing = true;
-  let isDecreasing = true;
+function isSafe(report: number[]): boolean {
+  const increasing = report.every(
+    (_, i) =>
+      i === 0 || (report[i] > report[i - 1] && report[i] - report[i - 1] <= 3)
+  );
 
-  for (let i = 0; i < arr.length - 1; i++) {
-    const current = arr[i];
-    const next = arr[i + 1];
-    const distance = Math.abs(current - next);
+  const decreasing = report.every(
+    (_, i) =>
+      i === 0 || (report[i] < report[i - 1] && report[i - 1] - report[i] <= 3)
+  );
 
-    if (distance < 1 || distance > 3) {
-      return false;
-    }
+  return increasing || decreasing;
+}
 
-    if (current >= next) {
-      isIncreasing = false;
-    }
+function isSafeWithDampener(report: number[]): boolean {
+  if (isSafe(report)) {
+    return true;
+  }
 
-    if (current <= next) {
-      isDecreasing = false;
+  let isSafeWithDampener = false;
+  for (let i = 0; i < report.length; i++) {
+    const modifiedReport = report.slice(0, i).concat(report.slice(i + 1));
+    if (isSafe(modifiedReport)) {
+      isSafeWithDampener = true;
+      break;
     }
   }
 
-  return isIncreasing || isDecreasing;
+  if (isSafeWithDampener) {
+    return true;
+  }
+
+  return false;
 }
 
 export default function main() {
   const inputPath = path.join(__dirname, 'input.txt');
   const data = fs.readFileSync(inputPath, 'utf8').split('\n');
-  const levels = splitLinesIntoLevels(data);
-  const levelsSafety = levels.map(isLevelSafe);
-  const safeLevels = levelsSafety.filter((level) => level === true);
-  console.log('Safe levels:', safeLevels.length);
+  const reports = splitLinesIntoReports(data);
+
+  const reportsSafety = reports.map(isSafe);
+  const safeReports = reportsSafety.filter((level) => level === true);
+  console.log('Safe reports:', safeReports.length);
+
+  const reportsSafetyWithDampener = reports.map(isSafeWithDampener);
+  const safeReportsWithDampener = reportsSafetyWithDampener.filter(
+    (level) => level === true
+  );
+  console.log('Safe reports with dampener:', safeReportsWithDampener.length);
 }
