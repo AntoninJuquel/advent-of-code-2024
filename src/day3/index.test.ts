@@ -1,4 +1,16 @@
-import { getMulXY, sumMulXY } from './index';
+import fs from 'fs';
+import path from 'path';
+import { getMulXY, sumMulXY, getEnabledMulXY, default as main } from './index';
+
+jest.mock('fs', () => ({
+  readFileSync: jest.fn(
+    () =>
+      "xmul(2,4)&mul[3,7]!^don't()_mul(5,5)+mul(32,64](mul(11,8)undo()?mul(8,5))"
+  ),
+}));
+jest.mock('path', () => ({
+  join: jest.fn(() => 'mockFilePath'),
+}));
 
 describe('getMulXY', () => {
   it('should return 2 digits numbers', () => {
@@ -60,5 +72,36 @@ describe('sumMulXY', () => {
       [8, 5],
     ];
     expect(sumMulXY(numbers)).toBe(161);
+  });
+});
+
+describe('getEnabledMulXY', () => {
+  it('should return only enabled mul sequences', () => {
+    const data =
+      "xmul(2,4)&mul[3,7]!^don't()_mul(5,5)+mul(32,64](mul(11,8)undo()?mul(8,5))";
+    const expected = [
+      [2, 4],
+      [8, 5],
+    ];
+
+    expect(getEnabledMulXY(data)).toEqual(expected);
+  });
+});
+
+describe('main', () => {
+  it('should read input, process reports, and log results', () => {
+    const consoleSpy = jest.spyOn(console, 'log').mockImplementation(() => {});
+    main();
+    expect(path.join).toHaveBeenCalledWith(__dirname, 'input.txt');
+    expect(fs.readFileSync).toHaveBeenCalledWith('mockFilePath', 'utf8');
+    expect(consoleSpy).toHaveBeenCalledWith(
+      'Sum of multiplications of numbers',
+      161
+    );
+    expect(consoleSpy).toHaveBeenCalledWith(
+      'Sum of multiplications of enabled numbers:',
+      48
+    );
+    consoleSpy.mockRestore();
   });
 });

@@ -7,17 +7,6 @@ import {
   default as main,
 } from './index';
 
-describe('splitLinesIntoReports', () => {
-  it('should split lines into reports', () => {
-    const data = ['1 2 3', '4 5 6'];
-    const expected = [
-      [1, 2, 3],
-      [4, 5, 6],
-    ];
-    expect(splitLinesIntoReports(data)).toEqual(expected);
-  });
-});
-
 const reports = [
   [7, 6, 4, 2, 1],
   [1, 2, 7, 8, 9],
@@ -35,6 +24,17 @@ jest.mock('fs', () => ({
 jest.mock('path', () => ({
   join: jest.fn(() => 'mockFilePath'),
 }));
+
+describe('splitLinesIntoReports', () => {
+  it('should split lines into reports', () => {
+    const data = ['1 2 3', '4 5 6'];
+    const expected = [
+      [1, 2, 3],
+      [4, 5, 6],
+    ];
+    expect(splitLinesIntoReports(data)).toEqual(expected);
+  });
+});
 
 describe('isSafe', () => {
   it('should return true because the levels are all decreasing by 1 or 2', () => {
