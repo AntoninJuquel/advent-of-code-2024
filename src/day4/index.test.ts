@@ -4,6 +4,8 @@ import {
   isWithinBounds,
   findWord,
   countXmasOccurrences,
+  isXmasPattern,
+  countXmasPatterns,
   default as main,
 } from './index';
 
@@ -63,6 +65,22 @@ describe('countXmasOccurrences', () => {
   });
 });
 
+describe('isXmasPattern', () => {
+  it('should return true if any of the patterns are found in the grid', () => {
+    expect(isXmasPattern(data, 1, 2)).toBe(true);
+  });
+
+  it('should return false if none of the patterns are found in the grid', () => {
+    expect(isXmasPattern(data, 0, 1)).toBe(false);
+  });
+});
+
+describe('countXmasPatterns', () => {
+  it('should return the number of XMAS patterns found in the grid', () => {
+    expect(countXmasPatterns(data)).toBe(9);
+  });
+});
+
 describe('main', () => {
   it('should read input, process reports, and log results', () => {
     const consoleSpy = jest.spyOn(console, 'log').mockImplementation(() => {});
@@ -73,6 +91,7 @@ describe('main', () => {
       'Number of occurrences of XMAS:',
       18
     );
+    expect(consoleSpy).toHaveBeenCalledWith('Number of XMAS patterns:', 9);
     consoleSpy.mockRestore();
   });
 });
